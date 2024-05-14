@@ -31,5 +31,15 @@ COPY --from=builder /coze-discord-proxy .
 EXPOSE 7077
 # 工作目录
 WORKDIR /app/coze-discord-proxy/data
+
+
+# 创建目录
+RUN mkdir -p /app/coze-discord-proxy/data/config
+# 创建启动脚本
+RUN echo -e '#!/bin/sh\n\
+echo $BOT_CONFIG > /app/coze-discord-proxy/data/config/bot_config.json\n\
+/coze-discord-proxy' > /app/coze-discord-proxy/data/start.sh \
+&& chmod +x /app/coze-discord-proxy/data/start.sh
+
 # 设置入口命令
-ENTRYPOINT ["/coze-discord-proxy"]
+ENTRYPOINT ["/app/coze-discord-proxy/data/start.sh"]
